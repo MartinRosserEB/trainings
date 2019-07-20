@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <a href="{{ path('edit_training_type', {'trainingType': trainingType.id}) }}">Bearbeiten</a>
+    <h3>{{ trainingType.name }}</h3>
+    <p>{{ trainingType.description }}</p>
+    <p>Aktive Teilnehmer:</p>
+    <ul>
+        {% for tTU in trainingType.getActiveTrainingTypeUsers() %}
+            <li>{{ tTU.user }}</li>
+        {% endfor %}
+    </ul>
+    <p>Trainings:</p>
+    <ul>
+        {% for training in trainingType.trainings %}
+            <li><a href="{{ path('show_training', {'training': training.id}) }}">{{ training }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for trainingType in trainingTypes %}
+        <p><a href="{{ path('show_training_type', {'trainingType': trainingType.id}) }}">{{ trainingType }}</a></p>
+    {% endfor %}
+{% endblock %}

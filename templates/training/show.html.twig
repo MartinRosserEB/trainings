@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <p><a href="{{ path('edit_training', {'training': training.id}) }}">Bearbeiten</a></p>
+    <h3>{{ training.title }}</h3>
+    <p>{{ training.creator }}</p>
+    <p>{{ training.trainingType }}</p>
+    <p>{{ training.description }}</p>
+    {% if training.start.diff(training.end).days == 0 %}
+        <p>{{ training.start|date('d.m.Y, H:i') }} - {{ training.end|date('H:i') }}</p>
+    {% else %}
+        <p>{{ training.start|date('d.m.Y H:i') }} - {{ training.end|date('d.m.Y H:i') }}</p>
+    {% endif %}
+    {% if training.public is not same as(null) %}
+        <p>Öffentlicher Link: <a href="{{ app.request.getSchemeAndHttpHost() ~ path('show_training_by_hash', {'hash': training.public}) }}">{{ app.request.getSchemeAndHttpHost() ~ path('show_training_by_hash', {'hash': training.public}) }}</a></p>
+    {% endif %}
+    <p>Angemeldet:</p>
+    <ul>
+    {% for attendant in training.getEnlistedAttendances() %}
+        <li>{{ attendant.user }}</li>
+    {% endfor %}
+    </ul>
+    <p>Teilgenommen:</p>
+    <ul>
+    {% for attendant in training.getConfirmedAttendances() %}
+        <li>{{ attendant.user }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html class="no-js" lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}BTV Bern{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <style>
+            .mainNavigation { display: flex; flex-direction: row; padding: 1rem 0; border-bottom: 1px solid black; }
+            .navigPart { flex: 1; }
+        </style>
+    </head>
+    <body>
+        <div class="mainNavigation">
+            <div class="navigPart">
+                <a href="{{ path('list_training_types') }}">Trainingsarten anzeigen</a>
+                <a href="{{ path('create_training_type') }}">Neue Trainingsart erstellen</a>
+            </div>
+            <div class="navigPart">
+                <a href="{{ path('create_training') }}">Neues Training erstellen</a>
+            </div>
+            <div class="navigPart">
+                <a href="{{ path('list_users') }}">Benutzer anzeigen</a>
+            </div>
+        </div>
+        {% block body %}{% endblock %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
