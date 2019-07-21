@@ -27,7 +27,7 @@ class TrainingController extends AbstractController
         $training = new Training;
         // default values for start and end since Firefox is only partly supporting datetime-local
         $training->setStart(new \DateTime('2020-03-03T19:30'));
-        $training->setEnd(new \DateTime('2017-03-03T21:00'));
+        $training->setEnd(new \DateTime('2020-03-03T21:00'));
         $form = $this->createForm(TrainingTypeForm::class, $training);
 
         $form->handleRequest($request);
@@ -189,7 +189,13 @@ class TrainingController extends AbstractController
         $person->setUser($user);
         $person->setFirstName($request->get('firstName'));
         $person->setFamilyName($request->get('familyName'));
-        
+        $person->setBirthdate(new \DateTime($request->get('birthdate')));
+        $person->setCity($request->get('city'));
+        $person->setZipCode($request->get('zipCode'));
+        $person->setStreet($request->get('street'));
+        $person->setStreetNo($request->get('streetNo'));
+        $person->setPhone($request->get('phone'));
+
         $em->persist($user);
         $em->persist($person);
         $em->flush();
@@ -232,6 +238,9 @@ class TrainingController extends AbstractController
         $attendance = $training->getAttendanceForPerson($person);
         if ($attendance === null) {
             throw $this->createNotFoundException('Attendance not found');
+        }
+        if ($attendance->getConfirmationTimestamp() !== null) {
+            throw new \Exception('Cannot delete attendance that has been confirmed already');
         }
         $em->remove($attendance);
         $em->flush();

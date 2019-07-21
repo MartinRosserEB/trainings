@@ -37,7 +37,13 @@ function registerEmail() {
     $.post("{{ path('register_person') }}", {
         firstName: $('[name="firstName"]').val(),
         familyName: $('[name="familyName"]').val(),
-        email: $('#email').val()
+        email: $('#email').val(),
+        street: $('[name="street"]').val(),
+        streetNo: $('[name="streetNo"]').val(),
+        city: $('[name="city"]').val(),
+        zipCode: $('[name="zipCode"]').val(),
+        birthdate: $('[name="birthdate"]').val(),
+        phone: $('[name="phone"]').val()
     }, function (result) {
         if (result.success) {
             $.get("{{ path('subscribe_person_for_training', {'person': '__person__', 'hash': hash}) }}".replace("__person__", result.person.id), null, function () {
@@ -91,6 +97,37 @@ $(function() {
                 }).append($('<input>', {
                     name: 'familyName',
                     type: 'text'
+            }))).append($('<p>', {
+                text: 'Strasse: '
+                }).append($('<input>', {
+                    name: 'street',
+                    type: 'text'
+            })).append($('<span>', {
+                text: ' Nummer: '
+            })).append($('<input>', {
+                    name: 'streetNo',
+                    type: 'number'
+            }))).append($('<p>', {
+                text: 'Postleitzahl: '
+                }).append($('<input>', {
+                    name: 'zipCode',
+                    type: 'text'
+            })).append($('<span>', {
+                text: ' Stadt: '
+                })).append($('<input>', {
+                    name: 'city',
+                    type: 'text'
+            }))).append($('<p>', {
+                text: 'Telefon: '
+                }).append($('<input>', {
+                    name: 'phone',
+                    type: 'text'
+            }))).append($('<p>', {
+                text: 'Geburtsdatum: '
+                }).append($('<input>', {
+                    name: 'birthdate',
+                    type: 'datetime-local',
+                    value: '2017-06-19'
             }))).append($('<button>', {
                 onclick: "registerEmail();",
                 text: "Neu registrieren"

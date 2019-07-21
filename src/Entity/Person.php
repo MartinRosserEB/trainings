@@ -57,6 +57,11 @@ class Person
     private $zipCode;
 
     /**
+     * @ORM\Column(type="string", length=30, nullable=true)
+     */
+    private $phone;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="persons")
      * @Groups({"public"})
      */
@@ -139,7 +144,7 @@ class Person
 
     public function setCity($city)
     {
-        $this->city = city;
+        $this->city = $city;
 
         return $this;
     }
@@ -159,6 +164,18 @@ class Person
     public function getZipCode()
     {
         return $this->zipCode;
+    }
+
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getPhone()
+    {
+        return $this->phone;
     }
 
     public function getUser()

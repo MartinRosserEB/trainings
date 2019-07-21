@@ -27,6 +27,7 @@ class TrainingType extends AbstractType
             ->add('trainingType', EntityType::class, [
                 'class' => TrainingTypeEntity::class
             ])
+            ->add('place', TextType::class)
             ->add('start', DateTimeType::class, [
                 'widget' => 'single_text',
             ])
