@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\TrainingType;
-use App\Entity\TrainingTypeUser;
+use App\Entity\TrainingTypePerson;
 use App\Form\TrainingTypeType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,32 +46,32 @@ class TrainingTypeController extends AbstractController
     public function edit(Request $request, TrainingType $trainingType)
     {
         $form = $this->createForm(TrainingTypeType::class, $trainingType);
-        $preUsers = $trainingType->getActiveTrainingTypeUsers();
+        $prePersons = $trainingType->getActiveTrainingTypePersons();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $trainingType = $form->getData();
-            $postUsers = $form->get('trainingTypeUsers')->getData();
+            $postPersons = $form->get('trainingTypePersons')->getData();
 
             $now = new \DateTime();
-            $preUsersList = [];
-            foreach ($preUsers as $preUser) {
-                $preUsersList[] = $preUser->getUser();
-                if (!in_array($preUser->getUser(), $postUsers)) {
-                    $preUser->setActiveUntil($now);
+            $prePersonsList = [];
+            foreach ($prePersons as $prePerson) {
+                $prePersonsList[] = $prePerson->getPerson();
+                if (!in_array($prePerson->getPerson(), $postPersons)) {
+                    $prePerson->setActiveUntil($now);
                 }
             }
-            foreach ($postUsers as $postUser) {
-                if (!in_array($postUser, $preUsersList)) {
-                    $trainingTypeUser = new TrainingTypeUser();
-                    $trainingTypeUser->setUser($postUser);
-                    $trainingTypeUser->setActiveSince($now);
-                    $trainingTypeUser->setTrainingType($trainingType);
+            foreach ($postPersons as $postPerson) {
+                if (!in_array($postPerson, $prePersonsList)) {
+                    $trainingTypePerson = new TrainingTypePerson();
+                    $trainingTypePerson->setPerson($postPerson);
+                    $trainingTypePerson->setActiveSince($now);
+                    $trainingTypePerson->setTrainingType($trainingType);
                     // TODO: improve role handling
-                    $trainingTypeUser->setRole('admin');
-                    $em->persist($trainingTypeUser);
+                    $trainingTypePerson->setRole('admin');
+                    $em->persist($trainingTypePerson);
                 }
             }
 
@@ -82,6 +82,11 @@ class TrainingTypeController extends AbstractController
         return $this->render('trainingType/edit.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    private function handlePersons()
+    {
+        
     }
 
     /**

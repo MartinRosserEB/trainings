@@ -6,8 +6,8 @@
     <p>{{ trainingType.description }}</p>
     <p>Aktive Teilnehmer:</p>
     <ul>
-        {% for tTU in trainingType.getActiveTrainingTypeUsers() %}
-            <li>{{ tTU.user }}</li>
+        {% for tTP in trainingType.getActiveTrainingTypePersons() %}
+            <li>{{ tTP.person }}</li>
         {% endfor %}
     </ul>
     <p>Trainings:</p>

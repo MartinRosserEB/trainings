@@ -15,15 +15,55 @@
         <p>Öffentlicher Link: <a href="{{ app.request.getSchemeAndHttpHost() ~ path('show_training_by_hash', {'hash': training.public}) }}">{{ app.request.getSchemeAndHttpHost() ~ path('show_training_by_hash', {'hash': training.public}) }}</a></p>
     {% endif %}
     <p>Angemeldet:</p>
-    <ul>
+    <ul id="subscribed">
     {% for attendant in training.getEnlistedAttendances() %}
-        <li>{{ attendant.user }}</li>
+        <li id="attendant_{{ attendant.person.id }}">{{ attendant.person }} <a href="javascript:void(0);" onclick="javascript:confirmAttendance({{ training.id }}, {{ attendant.person.id }});">Teilnahme bestätigen</a></li>
     {% endfor %}
     </ul>
     <p>Teilgenommen:</p>
-    <ul>
+    <ul id="participated">
     {% for attendant in training.getConfirmedAttendances() %}
-        <li>{{ attendant.user }}</li>
+        <li id="attendant_{{ attendant.person.id }}">{{ attendant.person }} <a href="javascript:void(0);" onclick="javascript:removeAttendanceConfirmation({{ training.id }}, {{ attendant.person.id }});">Teilnahmebestätigung entfernen</a></li>
     {% endfor %}
     </ul>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+function confirmAttendance(trainingId, personId)
+{
+    $.post("{{ path('training_confirm_attendance') }}", {
+        training: trainingId,
+        person: personId
+    }, function (res) {
+        $("#attendant_" + res.person.id).remove();
+        $("#participated").append($("<li>", {
+            id: "attendant_" + res.person.id,
+            text: res.person.firstName + " " + res.person.familyName + " "
+        }).append($("<a>", {
+            href: "javascript:void(0);",
+            onclick: "javascript:removeAttendanceConfirmation(" + res.training.id + ", " + res.person.id + ");",
+            text: "Teilnahmebestätigung entfernen"
+        })));
+    });
+}
+
+function removeAttendanceConfirmation(trainingId, personId)
+{
+    $.post("{{ path('training_remove_attendance_confirmation') }}", {
+        training: trainingId,
+        person: personId
+    }, function (res) {
+        $("#attendant_" + res.person.id).remove();
+        $("#subscribed").append($("<li>", {
+            id: "attendant_" + res.person.id,
+            text: res.person.firstName + " " + res.person.familyName + " "
+        }).append($("<a>", {
+            href: "javascript:void(0);",
+            onclick: "javascript:confirmAttendance(" + res.training.id + ", " + res.person.id + ");",
+            text: "Teilnahme bestätigen"
+        })));
+    });
+}
+</script>
 {% endblock %}

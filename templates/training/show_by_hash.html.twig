@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_public.html.twig' %}
 
 {% block body %}
     <h3>{{ training.title }}</h3>
@@ -34,14 +34,13 @@ function validateEmail(sEmail) {
 function registerEmail() {
     $("input").prop('disabled', true);
     $("button").remove();
-    $.post("{{ path('register_user') }}", {
+    $.post("{{ path('register_person') }}", {
         firstName: $('[name="firstName"]').val(),
         familyName: $('[name="familyName"]').val(),
         email: $('#email').val()
     }, function (result) {
         if (result.success) {
-            var user = JSON.parse(result.user);
-            $.get("{{ path('enlist_user_for_training', {'user': '__user__', 'hash': hash}) }}".replace("__user__", user.id), null, function () {
+            $.get("{{ path('subscribe_person_for_training', {'person': '__person__', 'hash': hash}) }}".replace("__person__", result.person.id), null, function () {
                 $("#registerNew").append($("<p>", {
                     text: "Anmeldung erfolgreich erfasst."
                 }));
@@ -54,13 +53,24 @@ function registerEmail() {
     });
 }
 
-function enlistUser(userId) {
+function subscribePerson(personId) {
     $("input").prop('disabled', true);
     $("button").remove();
     $("a").attr("onclick", "");
-    $.post("{{ path('enlist_user_for_training', {'user': '__user__', 'hash': hash}) }}".replace("__user__", userId), null, function () {
+    $.post("{{ path('subscribe_person_for_training', {'person': '__person__', 'hash': hash}) }}".replace("__person__", personId), null, function (res) {
         $("#registerNew").append($("<p>", {
-            text: "Benutzer erfolgreich angemeldet"
+            text: res.person.firstName + " " + res.person.familyName + " erfolgreich angemeldet"
+        }));
+    });
+}
+
+function unsubscribePerson(personId) {
+    $("input").prop('disabled', true);
+    $("button").remove();
+    $("a").attr("onclick", "");
+    $.post("{{ path('unsubscribe_person_for_training', {'person': '__person__', 'hash': hash}) }}".replace("__person__", personId), null, function (res) {
+        $("#registerNew").append($("<p>", {
+            text: res.person.firstName + " " + res.person.familyName + " erfolgreich abgemeldet"
         }));
     });
 }
@@ -85,19 +95,28 @@ $(function() {
                 onclick: "registerEmail();",
                 text: "Neu registrieren"
             }));
-            var url = "{{ path('find_user_by_mail', {'mail': '__mail__'}) }}".replace("__mail__", mailField.val());
+            var url = "{{ path('find_person_by_mail', {'mail': '__mail__', 'hash': hash}) }}".replace("__mail__", mailField.val());
             $.get(url, null, function (result) {
-                var resArray = JSON.parse(result);
+                var registeredPersons = result.registered;
+                var unregisteredPersons = result.unregistered;
                 var resField = $("#emailResults");
                 resField.html("");
-                if (resArray.length > 0) {
-                    resArray.forEach(item => {
-                        resField.append($('<a>', {
+                if (registeredPersons.length > 0 || unregisteredPersons.length > 0) {
+                    var ulContainer = resField.append($('<ul>')).children().filter('ul');
+                    unregisteredPersons.forEach(item => {
+                        ulContainer.append($('<li>').append($('<a>', {
                             href: "javascript:void(0);",
-                            onclick: "javascript:enlistUser(" + item.id + ")",
+                            onclick: "javascript:subscribePerson(" + item.id + ")",
                             text: item.firstName + ' ' + item.familyName + ' für Training anmelden'
-                        }));
-                    })
+                        })));
+                    });
+                    registeredPersons.forEach(item => {
+                        ulContainer.append($('<li>').append($('<a>', {
+                            href: "javascript:void(0);",
+                            onclick: "javascript:unsubscribePerson(" + item.id + ")",
+                            text: item.firstName + ' ' + item.familyName + ' für Training abmelden'
+                        })));
+                    });
                 }
             })
         }

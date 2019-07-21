@@ -33,9 +33,9 @@ class TrainingType
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity="TrainingTypeUser", mappedBy="trainingType")
+     * @ORM\OneToMany(targetEntity="TrainingTypePerson", mappedBy="trainingType")
      */
-    private $trainingTypeUsers;
+    private $trainingTypePersons;
 
     /**
      * @ORM\OneToMany(targetEntity="Training", mappedBy="trainingType")
@@ -44,7 +44,7 @@ class TrainingType
 
     public function __construct()
     {
-        $this->trainingTypeUsers = new ArrayCollection();
+        $this->trainingTypePersons = new ArrayCollection();
         $this->trainings = new ArrayCollection();
     }
 
@@ -77,30 +77,30 @@ class TrainingType
         return $this;
     }
 
-    public function getTrainingTypeUsers()
+    public function getTrainingTypePersons()
     {
-        return $this->trainingTypeUsers;
+        return $this->trainingTypePersons;
     }
 
-    public function getActiveTrainingTypeUsers()
+    public function getActiveTrainingTypePersons()
     {
-        return $this->trainingTypeUsers->filter(
-            function ($trainingTypeUser) {
-                return $trainingTypeUser->getActiveUntil() === null ;
+        return $this->trainingTypePersons->filter(
+            function ($trainingTypePerson) {
+                return $trainingTypePerson->getActiveUntil() === null ;
             }
         );
     }
 
-    public function addTrainingTypeUser(TrainingTypeUser $trainingTypeUser)
+    public function addTrainingTypePerson(TrainingTypePerson $trainingTypePerson)
     {
-        $this->trainingTypeUsers->add($trainingTypeUser);
+        $this->trainingTypePersons->add($trainingTypePerson);
 
         return $this;
     }
 
-    public function removeTrainingTypeUser(TrainingTypeUser $trainingTypeUser)
+    public function removeTrainingTypePerson(TrainingTypePerson $trainingTypePerson)
     {
-        $this->trainingTypeUsers->remove($trainingTypeUser);
+        $this->trainingTypePersons->remove($trainingTypePerson);
 
         return $this;
     }

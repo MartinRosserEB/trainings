@@ -18,6 +18,7 @@ class Training {
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"public"})
      */
     private $id;
 
@@ -188,13 +189,21 @@ class Training {
         );
     }
 
-    public function getAttendanceForUser(User $user)
+    public function getAttendanceForPerson(Person $person)
     {
-        return $this->attendances->filter(
-            function ($attendance) use ($user) {
-                return $attendance->getUser() === $user;
+        $attendance = $this->attendances->filter(
+            function ($attendance) use ($person) {
+                return $attendance->getPerson() === $person;
             }
         );
+
+        if (count($attendance) > 0) {
+            $attendance = $attendance->first();
+        } else {
+            $attendance = null;
+        }
+
+        return $attendance;
     }
 
     public function getPublic()

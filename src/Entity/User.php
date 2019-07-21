@@ -21,27 +21,15 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, nullable=true)
+     * @ORM\Column(type="string", length=180)
      * @Groups({"public"})
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=180, nullable=true)
-     * @Groups({"public"})
+     * @ORM\OneToMany(targetEntity="Person", mappedBy="user")
      */
-    private $firstName;
-
-    /**
-     * @ORM\Column(type="string", length=180, nullable=true)
-     * @Groups({"public"})
-     */
-    private $familyName;
-
-    /**
-     * @ORM\OneToMany(targetEntity="TrainingTypeUser", mappedBy="user")
-     */
-    private $userTrainingTypes;
+    private $persons;
 
     /**
      * @var string The hashed password
@@ -56,7 +44,7 @@ class User implements UserInterface
 
     public function __construct()
     {
-        $this->userTrainingTypes = new ArrayCollection();
+        $this->persons = new ArrayCollection();
     }
 
     public function getId(): int
@@ -76,30 +64,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function setFirstName($firstName)
-    {
-        $this->firstName = $firstName;
-
-        return $this;
-    }
-
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    public function setFamilyName($familyName)
-    {
-        $this->familyName = $familyName;
-
-        return $this;
-    }
-
-    public function getFamilyName()
-    {
-        return $this->familyName;
-    }
-
     /**
      * A visual identifier that represents this user.
      *
@@ -107,20 +71,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        $name = '';
-        if ($this->firstName) {
-            $name .= $this->firstName;
-        }
-        if ($this->familyName) {
-            if ($name !== '') {
-                $name .= ' ';
-            }
-            $name .= $this->familyName;
-        }
-        if ($name === '') {
-            $name = $this->getUser();
-        }
-        return (string) $name;
+        return (string) $this->email;
     }
 
     /**
@@ -131,19 +82,9 @@ class User implements UserInterface
         return ['ROLE_USER'];
     }
 
-    public function getUserTrainingTypes()
+    public function getPersons()
     {
-        return $this->userTrainingTypes;
-    }
-
-    public function addUserTrainingType(TrainingTypeUser $userTrainingType)
-    {
-        $this->userTrainingTypes->add($userTrainingType);
-    }
-
-    public function removeUserTrainingType(TrainingTypeUser $userTrainingType)
-    {
-        $this->userTrainingTypes->remove($userTrainingType);
+        return $this->persons;
     }
 
     /**

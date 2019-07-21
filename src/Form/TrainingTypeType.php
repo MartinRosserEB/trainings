@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\TrainingType;
-use App\Entity\User;
+use App\Entity\Person;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,18 +20,18 @@ class TrainingTypeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $entity = $builder->getData();
-        $trainingTypeUsers = [];
-        foreach ($entity->getActiveTrainingTypeUsers() as $tTU) {
-            $trainingTypeUsers[] = $tTU->getUser();
+        $trainingTypePersons = [];
+        foreach ($entity->getActiveTrainingTypePersons() as $tTP) {
+            $trainingTypePersons[] = $tTP->getPerson();
         }
 
         $builder
             ->add('name', TextType::class)
             ->add('description', TextareaType::class)
-            ->add('trainingTypeUsers', EntityType::class, [
-                'class' => User::class,
+            ->add('trainingTypePersons', EntityType::class, [
+                'class' => Person::class,
                 'multiple' => true,
-                'data' => $trainingTypeUsers,
+                'data' => $trainingTypePersons,
                 'mapped' => false,
                 'required' => false
             ])

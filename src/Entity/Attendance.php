@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @author mrosser
  * @ORM\Entity()
- * @UniqueEntity(fields={"user", "training"})
+ * @UniqueEntity(fields={"person", "training"})
  */
 class Attendance {
     /**
@@ -36,9 +36,9 @@ class Attendance {
     private $enlistingTimestamp;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Person")
      */
-    private $user;
+    private $person;
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
@@ -91,19 +91,19 @@ class Attendance {
         return $this->enlistingTimestamp;
     }
 
-    public function setUser(User $user) : Attendance
+    public function setPerson(Person $person) : Attendance
     {
-        $this->user = $user;
+        $this->person = $person;
 
         return $this;
     }
 
-    public function getUser()
+    public function getPerson()
     {
-        return $this->user;
+        return $this->person;
     }
 
-    public function setConfirmationUser(User $confirmationUser) : Attendance
+    public function setConfirmationUser(?User $confirmationUser) : Attendance
     {
         $this->confirmationUser = $confirmationUser;
 
@@ -115,7 +115,7 @@ class Attendance {
         return $this->confirmationUser;
     }
 
-    public function setConfirmationTimestamp(\DateTime $confirmationTimestamp) : Attendance
+    public function setConfirmationTimestamp(?\DateTime $confirmationTimestamp) : Attendance
     {
         $this->confirmationTimestamp = $confirmationTimestamp;
 

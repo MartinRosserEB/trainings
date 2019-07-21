@@ -4,17 +4,24 @@
 <table>
     <thead>
         <tr>
+            <th>E-Mail</th>
             <th>Vorname</th>
             <th>Nachname</th>
-            <th>E-Mail</th>
             <th>Aktion</th>
         </tr>
     </thead>
     <tbody>
     {% for user in users %}
         <tr>
-            <td>{{ user.firstName }}</td>
-            <td>{{ user.familyName }}</td>
+            <td>
+                {% for person in user.persons %}
+                    {{ person.firstName }}<br />
+                {% endfor %}
+            </td>
+            <td>
+                {% for person in user.persons %}
+                    {{ person.familyName }}<br />
+                {% endfor %}</td>
             <td>{{ user.email }}</td>
             <td><a href="{{ path('edit_user', {'user': user.id}) }}">bearbeiten</a></td>
         </tr>

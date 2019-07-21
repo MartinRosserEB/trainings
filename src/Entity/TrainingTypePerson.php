@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity()
  */
-class TrainingTypeUser
+class TrainingTypePerson
 {
     /**
      * @ORM\Id()
@@ -17,12 +17,12 @@ class TrainingTypeUser
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User",inversedBy="userTrainingTypes")
+     * @ORM\ManyToOne(targetEntity="Person",inversedBy="personTrainingTypes")
      */
-    private $user;
+    private $person;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TrainingType",inversedBy="trainingTypeUsers")
+     * @ORM\ManyToOne(targetEntity="TrainingType",inversedBy="trainingTypePersons")
      */
     private $trainingType;
 
@@ -41,14 +41,14 @@ class TrainingTypeUser
      */
     private $activeUntil;
 
-    public function getUser()
+    public function getPerson()
     {
-        return $this->user;
+        return $this->person;
     }
 
-    public function setUser(User $user)
+    public function setPerson(Person $person)
     {
-        $this->user = $user;
+        $this->person = $person;
 
         return $this;
     }
@@ -102,7 +102,7 @@ class TrainingTypeUser
     }
 
     public function __toString() {
-        return $this->getUser()->__toString();
+        return $this->getPerson()->__toString();
     }
 
     public function getId(): int
