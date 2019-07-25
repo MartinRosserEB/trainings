@@ -27,7 +27,7 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\OneToMany(targetEntity="Person", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Person", mappedBy="user", cascade={"persist"})
      */
     private $persons;
 
@@ -38,6 +38,12 @@ class User implements UserInterface
     private $password;
 
     /**
+     * @var string The hashed password
+     * @ORM\Column(type="array")
+     */
+    private $roles;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $apiToken;
@@ -45,6 +51,7 @@ class User implements UserInterface
     public function __construct()
     {
         $this->persons = new ArrayCollection();
+        $this->roles = [];
     }
 
     public function getId(): int
@@ -79,12 +86,48 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        return $this->roles;
+    }
+
+    public function addRole(string $role)
+    {
+        if (!in_array($role, $this->roles)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
+    public function removeRole(string $role)
+    {
+        if ($this->roles !== null) {
+            $index = array_search($role, $this->roles);
+            if ($index !== false) {
+                array_splice($this->roles, $index, 1);
+            }
+        }
+
+        return $this;
     }
 
     public function getPersons()
     {
         return $this->persons;
+    }
+
+    public function addPerson(Person $person)
+    {
+        $person->setUser($this);
+        $this->persons->add($person);
+    }
+
+    public function removePerson(Person $person)
+    {
+        if ($this->persons->contains($person)) {
+            $person->setUser(null);
+            $this->persons->removeElement($person);
+        }
+        return $this;
     }
 
     /**

@@ -5,3 +5,51 @@
     {{ form(form) }}
 </div>
 {% endblock %}
+
+{% block javascripts %}
+<script>
+var $collectionHolder;
+
+var $addPersonButton = $('<button type="button" class="add_person_link">Person hinzufügen</button>');
+var $newLinkDiv = $('<div></div>').append($addPersonButton);
+
+$(function() {
+    $collectionHolder = $('div#user_persons');
+
+    $collectionHolder.append($newLinkDiv);
+
+    $collectionHolder.children(":not(:last)").each(function() {
+        addPersonFormDeleteLink($(this));
+    });
+
+    $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+    $addPersonButton.on('click', function(e) {
+        addPersonForm($collectionHolder, $newLinkDiv);
+    });
+});
+
+function addPersonForm($collectionHolder, $newLinkDiv) {
+    var prototype = $collectionHolder.data('prototype');
+
+    var index = $collectionHolder.data('index');
+
+    var newForm = prototype;
+
+    $collectionHolder.data('index', index + 1);
+
+    var $newFormLi = $('<div></div>').append(newForm);
+    addPersonFormDeleteLink($newFormLi);
+    $newLinkDiv.before($newFormLi);
+}
+
+function addPersonFormDeleteLink($personFormLi) {
+    var $removeFormButton = $('<button type="button">Person entfernen</button>');
+    $personFormLi.append($removeFormButton);
+
+    $removeFormButton.on('click', function(e) {
+        $personFormLi.remove();
+    });
+}
+</script>
+{% endblock %}

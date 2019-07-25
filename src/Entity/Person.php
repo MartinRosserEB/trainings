@@ -183,7 +183,7 @@ class Person
         return $this->user;
     }
 
-    public function setUser($user)
+    public function setUser(?User $user)
     {
         $this->user = $user;
 
@@ -202,7 +202,7 @@ class Person
 
     public function removePersonTrainingType(TrainingTypePerson $personTrainingType)
     {
-        $this->personTrainingTypes->remove($personTrainingType);
+        $this->personTrainingTypes->removeElement($personTrainingType);
     }
 
     public function __toString()

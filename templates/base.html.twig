@@ -7,6 +7,7 @@
         <style>
             .mainNavigation { display: flex; flex-direction: row; padding: 1rem 0; border-bottom: 1px solid black; }
             .navigPart { flex: 1; }
+            .vTop { vertical-align: top; }
         </style>
     </head>
     <body>
@@ -20,6 +21,10 @@
             </div>
             <div class="navigPart">
                 <a href="{{ path('list_users') }}">Benutzer anzeigen</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('create_user') }}">Benutzer erstellen</a>
+                {% endif %}
+                <a href="{{ path('edit_own_user') }}">Kontoeinstellungen bearbeiten</a>
             </div>
         </div>
         {% block body %}{% endblock %}

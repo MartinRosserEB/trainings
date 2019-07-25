@@ -5,25 +5,29 @@
     <thead>
         <tr>
             <th>E-Mail</th>
+            <th>Aktion</th>
             <th>Vorname</th>
             <th>Nachname</th>
-            <th>Aktion</th>
         </tr>
     </thead>
     <tbody>
     {% for user in users %}
         <tr>
-            <td>
+            <td class="vTop">{{ user.email }}</td>
+            <td class="vTop">
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('edit_user', {'user': user.id}) }}">bearbeiten</a>
+                {% endif %}
+            </td>
+            <td class="vTop">
                 {% for person in user.persons %}
                     {{ person.firstName }}<br />
                 {% endfor %}
             </td>
-            <td>
+            <td class="vTop">
                 {% for person in user.persons %}
                     {{ person.familyName }}<br />
                 {% endfor %}</td>
-            <td>{{ user.email }}</td>
-            <td><a href="{{ path('edit_user', {'user': user.id}) }}">bearbeiten</a></td>
         </tr>
     {% endfor %}
     </tbody>

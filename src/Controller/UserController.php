@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\UserType;
+use App\Service\UserService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/user/")
@@ -26,23 +28,42 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("edit/{user}", name="edit_user")
+     * @Route("create", name="create_user")
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function edit(Request $request, User $user)
+    public function create(Request $request, UserService $userSrv)
     {
-        $form = $this->createForm(UserType::class, $user);
-
-        $form->handleRequest($request);
+        $form = $userSrv->handleForm($request, new User());
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $form->getData();
-            $em = $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute("list_users");
+            return $this->redirectToRoute("edit_user", [
+                'user' => $user->getId(),
+            ]);
         }
 
         return $this->render('user/edit.html.twig', [
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("edit/{user}", name="edit_user")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function edit(Request $request, User $user, UserService $userSrv)
+    {
+        return $this->render('user/edit.html.twig', [
+            'form' => $userSrv->handleForm($request, $user)->createView()
+        ]);
+    }
+
+    /**
+     * @Route("editme", name="edit_own_user")
+     */
+    public function editme(Request $request, UserInterface $user, UserService $userSrv)
+    {
+        return $this->render('user/edit.html.twig', [
+            'form' => $userSrv->handleForm($request, $user)->createView()
         ]);
     }
 }
