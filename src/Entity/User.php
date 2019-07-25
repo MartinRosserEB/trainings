@@ -119,6 +119,7 @@ class User implements UserInterface
     {
         $person->setUser($this);
         $this->persons->add($person);
+        return $this;
     }
 
     public function removePerson(Person $person)

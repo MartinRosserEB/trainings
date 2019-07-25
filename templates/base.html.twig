@@ -14,7 +14,9 @@
         <div class="mainNavigation">
             <div class="navigPart">
                 <a href="{{ path('list_training_types') }}">Trainingsarten anzeigen</a>
-                <a href="{{ path('create_training_type') }}">Neue Trainingsart erstellen</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('create_training_type') }}">Neue Trainingsart erstellen</a>
+                {% endif %}
             </div>
             <div class="navigPart">
                 <a href="{{ path('create_training') }}">Neues Training erstellen</a>
@@ -25,6 +27,7 @@
                     <a href="{{ path('create_user') }}">Benutzer erstellen</a>
                 {% endif %}
                 <a href="{{ path('edit_own_user') }}">Kontoeinstellungen bearbeiten</a>
+                <a href="{{ path('app_logout') }}">Ausloggen</a>
             </div>
         </div>
         {% block body %}{% endblock %}

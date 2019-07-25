@@ -47,7 +47,7 @@ class TrainingController extends AbstractController
             ]);
         }
 
-        return $this->render('training/create.html.twig', [
+        return $this->render('training/form.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -73,7 +73,7 @@ class TrainingController extends AbstractController
             $em->flush();
         }
 
-        return $this->render('training/edit.html.twig', [
+        return $this->render('training/form.html.twig', [
             'form' => $form->createView()
         ]);
     }

@@ -17,12 +17,12 @@ class TrainingTypePerson
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Person",inversedBy="personTrainingTypes")
+     * @ORM\ManyToOne(targetEntity="Person", inversedBy="personTrainingTypes")
      */
     private $person;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TrainingType",inversedBy="trainingTypePersons")
+     * @ORM\ManyToOne(targetEntity="TrainingType", inversedBy="trainingTypePersons")
      */
     private $trainingType;
 
@@ -58,7 +58,7 @@ class TrainingTypePerson
         return $this->trainingType;
     }
 
-    public function setTrainingType(TrainingType $trainingType)
+    public function setTrainingType(?TrainingType $trainingType)
     {
         $this->trainingType = $trainingType;
 

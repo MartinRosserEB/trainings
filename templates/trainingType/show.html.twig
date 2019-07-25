@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <a href="{{ path('edit_training_type', {'trainingType': trainingType.id}) }}">Bearbeiten</a>
+    {% if role is same as('ADMIN') %}<a href="{{ path('edit_training_type', {'trainingType': trainingType.id}) }}">Bearbeiten</a>{% endif %}
     <h3>{{ trainingType.name }}</h3>
     <p>{{ trainingType.description }}</p>
     <p>Aktive Teilnehmer:</p>

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\TrainingTypeRepository")
  */
 class TrainingType
 {
@@ -33,7 +33,7 @@ class TrainingType
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity="TrainingTypePerson", mappedBy="trainingType")
+     * @ORM\OneToMany(targetEntity="TrainingTypePerson", mappedBy="trainingType", cascade={"persist"})
      */
     private $trainingTypePersons;
 
@@ -86,21 +86,44 @@ class TrainingType
     {
         return $this->trainingTypePersons->filter(
             function ($trainingTypePerson) {
-                return $trainingTypePerson->getActiveUntil() === null ;
+                return $trainingTypePerson->getActiveUntil() === null;
             }
         );
+    }
+
+    public function getActiveTrainingTypePersonFor(User $user)
+    {
+         $tTP = $this->trainingTypePersons->filter(
+            function ($trainingTypePerson) use ($user) {
+                return $trainingTypePerson->getActiveUntil() === null && $trainingTypePerson->getPerson()->getUser() === $user;
+            }
+        );
+        if (count($tTP) > 0) {
+            return $tTP->first();
+        } else {
+            return null;
+        }
     }
 
     public function addTrainingTypePerson(TrainingTypePerson $trainingTypePerson)
     {
         $this->trainingTypePersons->add($trainingTypePerson);
+        $trainingTypePerson->setTrainingType($this);
 
         return $this;
     }
 
+    /**
+     * Method only sets TrainingTypePerson inactive.
+     *
+     * @param \App\Entity\TrainingTypePerson $trainingTypePerson
+     * @return $this
+     */
     public function removeTrainingTypePerson(TrainingTypePerson $trainingTypePerson)
     {
-        $this->trainingTypePersons->remove($trainingTypePerson);
+        if ($this->trainingTypePersons->contains($trainingTypePerson)) {
+            $trainingTypePerson->setActiveUntil(new \DateTime());
+        }
 
         return $this;
     }

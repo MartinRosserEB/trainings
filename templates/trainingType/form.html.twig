@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="cell">
+    {{ form(form) }}
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+#training_type_trainingTypePersons > div {
+    display: flex;
+    flex-direction: row;
+}
+
+#training_type_trainingTypePersons > div > div {
+    display: flex;
+}
+</style>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+var $collectionHolder;
+
+var $addTrainingTypePersonButton = $('<button type="button" class="add_training_type_person_link">Person hinzufügen</button>');
+var $newLinkDiv = $('<div></div>').append($addTrainingTypePersonButton);
+
+$(function() {
+    $collectionHolder = $('div#training_type_trainingTypePersons');
+
+    $collectionHolder.append($newLinkDiv);
+
+    $collectionHolder.children(":not(:last)").each(function() {
+        addTrainingTypePersonFormDeleteLink($(this));
+    });
+
+    $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+    $addTrainingTypePersonButton.on('click', function(e) {
+        addTrainingTypePersonForm($collectionHolder, $newLinkDiv);
+    });
+});
+
+function addTrainingTypePersonForm($collectionHolder, $newLinkDiv) {
+    var prototype = $collectionHolder.data('prototype');
+
+    var index = $collectionHolder.data('index');
+
+    var newForm = prototype;
+    newForm = newForm.replace(/__name__/g, index);
+
+    $collectionHolder.data('index', index + 1);
+
+    var $newFormLi = $('<div></div>').append(newForm);
+    addTrainingTypePersonFormDeleteLink($newFormLi);
+    $newLinkDiv.before($newFormLi);
+}
+
+function addTrainingTypePersonFormDeleteLink($trainingTypePersonFormDiv) {
+    var $removeFormButton = $('<button type="button">Person entfernen</button>');
+    $trainingTypePersonFormDiv.append($removeFormButton);
+
+    $removeFormButton.on('click', function(e) {
+        $trainingTypePersonFormDiv.remove();
+    });
+}
+</script>
+{% endblock %}
