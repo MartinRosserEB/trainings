@@ -4,9 +4,41 @@
         <meta charset="UTF-8">
         <title>{% block title %}BTV Bern{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
+        <style>
+            .topBar {
+                border-bottom: solid 4px #af141b;
+            }
+            .mainNavigation {
+                height: 150px;
+                display: flex;
+                flex-direction: row;
+                margin: 0 20%;
+                padding: 1rem 0;
+                position: relative;
+            }
+            .logo {
+                background: white;
+                padding: 0 20px;
+                position: absolute;
+                left: 0;
+                transform: translateX(-100%);
+            }
+            .mainContainer {
+                margin: 50px 20%;
+            }
+            .navigPart { flex: 1; margin-top: 110px; }
+            .vTop { vertical-align: top; }
+        </style>
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div class="topBar">
+            <div class="mainNavigation">
+                <div class="logo"><img src="https://btvbern.ch/wp-content/uploads/2019/05/BTV_logo19.png" width="180px" height="215px" alt="BTV Logo"></div>
+            </div>
+        </div>
+        <div class="mainContainer">
+            {% block body %}{% endblock %}
+        </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         {% block javascripts %}{% endblock %}
     </body>

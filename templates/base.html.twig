@@ -5,32 +5,57 @@
         <title>{% block title %}BTV Bern{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
         <style>
-            .mainNavigation { display: flex; flex-direction: row; padding: 1rem 0; border-bottom: 1px solid black; }
-            .navigPart { flex: 1; }
+            .topBar {
+                border-bottom: solid 4px #af141b;
+            }
+            .mainNavigation {
+                height: 150px;
+                display: flex;
+                flex-direction: row;
+                margin: 0 20%;
+                padding: 1rem 0;
+                position: relative;
+            }
+            .logo {
+                background: white;
+                padding: 0 20px;
+                position: absolute;
+                left: 0;
+                transform: translateX(-100%);
+            }
+            .mainContainer {
+                margin: 50px 20%;
+            }
+            .navigPart { flex: 1; margin-top: 110px; }
             .vTop { vertical-align: top; }
         </style>
     </head>
     <body>
-        <div class="mainNavigation">
-            <div class="navigPart">
-                <a href="{{ path('list_training_types') }}">Trainingsarten anzeigen</a>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('create_training_type') }}">Neue Trainingsart erstellen</a>
-                {% endif %}
-            </div>
-            <div class="navigPart">
-                <a href="{{ path('create_training') }}">Neues Training erstellen</a>
-            </div>
-            <div class="navigPart">
-                <a href="{{ path('list_users') }}">Benutzer anzeigen</a>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('create_user') }}">Benutzer erstellen</a>
-                {% endif %}
-                <a href="{{ path('edit_own_user') }}">Kontoeinstellungen bearbeiten</a>
-                <a href="{{ path('app_logout') }}">Ausloggen</a>
+        <div class="topBar">
+            <div class="mainNavigation">
+                <div class="logo"><img src="https://btvbern.ch/wp-content/uploads/2019/05/BTV_logo19.png" width="180px" height="215px" alt="BTV Logo"></div>
+                <div class="navigPart">
+                    <a href="{{ path('list_training_types') }}">Trainingsarten anzeigen</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('create_training_type') }}">Neue Trainingsart erstellen</a>
+                    {% endif %}
+                </div>
+                <div class="navigPart">
+                    <a href="{{ path('create_training') }}">Neues Training erstellen</a>
+                </div>
+                <div class="navigPart">
+                    <a href="{{ path('list_users') }}">Benutzer anzeigen</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('create_user') }}">Benutzer erstellen</a>
+                    {% endif %}
+                    <a href="{{ path('edit_own_user') }}">Kontoeinstellungen bearbeiten</a>
+                    <a href="{{ path('app_logout') }}">Ausloggen</a>
+                </div>
             </div>
         </div>
-        {% block body %}{% endblock %}
+        <div class="mainContainer">
+            {% block body %}{% endblock %}
+        </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         {% block javascripts %}{% endblock %}
     </body>
