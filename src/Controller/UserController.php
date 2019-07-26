@@ -33,7 +33,9 @@ class UserController extends AbstractController
      */
     public function create(Request $request, UserService $userSrv)
     {
-        $form = $userSrv->handleForm($request, new User());
+        $user = new User();
+        $this->getDoctrine()->getManager()->persist($user);
+        $form = $userSrv->handleForm($request, $user);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->redirectToRoute("edit_user", [
