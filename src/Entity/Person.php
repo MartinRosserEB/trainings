@@ -77,7 +77,7 @@ class Person
         $this->personTrainingTypes = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -198,11 +198,15 @@ class Person
     public function addPersonTrainingType(TrainingTypePerson $personTrainingType)
     {
         $this->personTrainingTypes->add($personTrainingType);
+
+        return $this;
     }
 
     public function removePersonTrainingType(TrainingTypePerson $personTrainingType)
     {
         $this->personTrainingTypes->removeElement($personTrainingType);
+
+        return $this;
     }
 
     public function __toString()
