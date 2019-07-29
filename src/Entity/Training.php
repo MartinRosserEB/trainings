@@ -83,14 +83,16 @@ class Training {
         $this->attendances = new ArrayCollection();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setCreator(User $creator) : void
+    public function setCreator(User $creator) : Training
     {
         $this->creator = $creator;
+
+        return $this;
     }
 
     public function getCreator()
@@ -106,11 +108,15 @@ class Training {
     public function setTrainingType(TrainingType $trainingType)
     {
         $this->trainingType = $trainingType;
+
+        return $this;
     }
 
-    public function setTitle(string $title): void
+    public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
     }
 
     public function getTitle()
@@ -130,9 +136,11 @@ class Training {
         return $this->place;
     }
 
-    public function setDescription(string $description): void
+    public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
     }
 
     public function getDescription()
@@ -140,9 +148,11 @@ class Training {
         return $this->description;
     }
 
-    public function setStart(\DateTime $start)
+    public function setStart(\DateTime $start): self
     {
         $this->start = $start;
+
+        return $this;
     }
 
     public function getStart()
@@ -150,9 +160,11 @@ class Training {
         return $this->start;
     }
 
-    public function setEnd(\DateTime $end)
+    public function setEnd(\DateTime $end): self
     {
         $this->end = $end;
+
+        return $this;
     }
 
     public function getEnd()
@@ -160,9 +172,15 @@ class Training {
         return $this->end;
     }
 
-    public function getComments()
+    public function setAttendances($attendances)
     {
-        return $this->comments;
+        foreach ($attendances as $attendance) {
+            if (!$attendance instanceof Attendance) {
+                throw new \InvalidArgumentException('Variable is not of type Attendance: '.$attendance);
+            }
+            $this->attendances->add($attendance);
+        }
+        return $this;
     }
 
     public function getAttendances()
