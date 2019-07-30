@@ -23,13 +23,16 @@ class UserService {
         $this->em = $em;
     }
 
-    public function handleForm(Request $request, User $user)
+    public function handleForm(Request $request, User $user, $addPW = true)
     {
         $form = $this->formSrv->create(UserType::class, $user);
-        $form->add('password', TextType::class, [
-            'mapped' => false,
-            'required' => false,
-        ])->add('submit', SubmitType::class);
+        if ($addPW) {
+            $form->add('password', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+            ]);
+        }
+        $form->add('submit', SubmitType::class);
 
         $prePersons = [];
         foreach ($user->getPersons() as $person) {

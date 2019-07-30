@@ -61,16 +61,18 @@ class TrainingTypeController extends AbstractController
      */
     public function show(TrainingType $trainingType, UserInterface $user)
     {
+        $role = 'ROLE_ADMIN';
         if (!$this->isGranted('ROLE_ADMIN')) {
             $tTP = $trainingType->getActiveTrainingTypePersonFor($user);
             if ($tTP === null) {
                 throw new AccessDeniedException('Access denied');
             }
+            $role = $tTP->getRole();
         }
 
         return $this->render('trainingType/show.html.twig', [
             'trainingType' => $trainingType,
-            'role' => $tTP->getRole(),
+            'role' => $role,
         ]);
     }
 

@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Attendance;
 use App\Entity\Training;
-use App\Entity\User;
 use App\Entity\Person;
 use App\Form\TrainingType as TrainingTypeForm;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -125,124 +123,6 @@ class TrainingController extends AbstractController
         }
         $attendance->setConfirmationUser(null);
         $attendance->setConfirmationTimestamp(null);
-        $em->flush();
-
-        return new JsonResponse([
-            'success' => true,
-            'person' => $serializer->normalize($person, 'json', ['groups' => 'public']),
-            'training' => $serializer->normalize($training, 'json', ['groups' => 'public']),
-        ]);
-    }
-
-    /**
-     * @Route("public/show/{hash}", name="show_training_by_hash")
-     */
-    public function showByHash($hash)
-    {
-        $training = $this->getDoctrine()->getManager()->getRepository(Training::class)->findOneByPublic($hash);
-
-        return $this->render('training/show_by_hash.html.twig', [
-            'training' => $training,
-            'hash' => $hash
-        ]);
-    }
-
-    /**
-     * @Route("public/get/person/{mail}/{hash}", name="find_person_by_mail")
-     */
-    public function findByMail($mail, $hash, SerializerInterface $serializer)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $training = $em->getRepository(Training::class)->findOneByPublic($hash);;
-        $users = $em->getRepository(User::class)->findByEmail($mail);
-        $unregisteredPersons = [];
-        $registeredPersons = [];
-        foreach ($users as $user) {
-            foreach ($user->getPersons() as $person) {
-                if (!$training || $training->getAttendanceForPerson($person) === null) {
-                    $unregisteredPersons[] = $person;
-                } else {
-                    $registeredPersons[] = $person;
-                }
-            }
-        }
-
-        return new JsonResponse([
-            'unregistered' => $serializer->normalize($unregisteredPersons, 'json', ['groups' => 'public']),
-            'registered' => $serializer->normalize($registeredPersons, 'json', ['groups' => 'public'])
-        ]);
-    }
-
-    /**
-     * @Route("public/register/person", name="register_person")
-     */
-    public function registerUser(Request $request, SerializerInterface $serializer)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $email = $request->get('email');
-        $user = $em->getRepository(User::class)->findOneByEmail($email);
-        if ($user === null) {
-            $user = new User();
-            $user->setEmail($email);
-        }
-        $person = new Person();
-        $person->setUser($user);
-        $person->setFirstName($request->get('firstName'));
-        $person->setFamilyName($request->get('familyName'));
-        $person->setBirthdate(new \DateTime($request->get('birthdate')));
-        $person->setCity($request->get('city'));
-        $person->setZipCode($request->get('zipCode'));
-        $person->setStreet($request->get('street'));
-        $person->setStreetNo($request->get('streetNo'));
-        $person->setPhone($request->get('phone'));
-
-        $em->persist($user);
-        $em->persist($person);
-        $em->flush();
-
-        return new JsonResponse([
-            'success' => true,
-            'person' => $serializer->normalize($person, 'json', ['groups' => 'public']),
-        ]);
-    }
-
-    /**
-     * @Route("public/subscribe/{hash}/{person}", name="subscribe_person_for_training")
-     */
-    public function subscribeUserForTraining(Request $request, Person $person, $hash, SerializerInterface $serializer)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $training = $em->getRepository(Training::class)->findOneByPublic($hash);
-        $attendance = (new Attendance())
-            ->setTraining($training)
-            ->setPerson($person)
-            ->setEnlistingIp($request->getClientIp())
-            ->setEnlistingTimestamp(new \DateTime());
-        $em->persist($attendance);
-        $em->flush();
-
-        return new JsonResponse([
-            'success' => true,
-            'person' => $serializer->normalize($person, 'json', ['groups' => 'public']),
-            'training' => $serializer->normalize($training, 'json', ['groups' => 'public']),
-        ]);
-    }
-
-    /**
-     * @Route("public/unsubscribe/{hash}/{person}", name="unsubscribe_person_for_training")
-     */
-    public function unsubscribeUserForTraining(Person $person, $hash, SerializerInterface $serializer)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $training = $em->getRepository(Training::class)->findOneByPublic($hash);
-        $attendance = $training->getAttendanceForPerson($person);
-        if ($attendance === null) {
-            throw $this->createNotFoundException('Attendance not found');
-        }
-        if ($attendance->getConfirmationTimestamp() !== null) {
-            throw new \Exception('Cannot delete attendance that has been confirmed already');
-        }
-        $em->remove($attendance);
         $em->flush();
 
         return new JsonResponse([

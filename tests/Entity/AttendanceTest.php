@@ -17,6 +17,14 @@ class AttendanceTest extends TestCase
         self::$testObject = new Attendance();
     }
 
+    public function test__Construct()
+    {
+        $person = new Person();
+        $training = new Training();
+        $newObject = new Attendance($person, $training);
+        $this->assertInstanceOf(\DateTime::class, $newObject->getEnlistingTimestamp());
+    }
+
     public function testGetId()
     {
         $this->assertSame(null, self::$testObject->getId());

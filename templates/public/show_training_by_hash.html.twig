@@ -1,0 +1,75 @@
+{% extends 'base_public.html.twig' %}
+
+{% block body %}
+    <h3>{{ training.title }}</h3>
+    <p>{{ training.trainingType }}</p>
+    <p>{{ training.description }}</p>
+    <p>{{ training.place }}</p>
+    {% if training.start.diff(training.end).days == 0 %}
+        <p>{{ training.start|date('d.m.Y, H:i') }} - {{ training.end|date('H:i') }}</p>
+    {% else %}
+        <p>{{ training.start|date('d.m.Y H:i') }} - {{ training.end|date('d.m.Y H:i') }}</p>
+    {% endif %}
+    {% if person is same as(null) %}
+    <p>Mit E-Mail anmelden:
+        <input id="email" />
+    </p>
+    <p id="emailResults">
+    </p>
+    <p id="registerNew">
+    </p>
+    {% else %}
+    <p>{{ person }} erfolgreich {% if unsubscribe|default(false) %}ab{% else %}an{% endif %}gemeldet.</p>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+{% if person is same as(null) %}
+<script>
+function validateEmail(sEmail) {
+    var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    if (filter.test(sEmail)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+$(function() {
+    $("#email").on("keyup", function (evt) {
+        var mailField = $("#email");
+        var registerNewField = $("#registerNew");
+        registerNewField.html("");
+        if (validateEmail(mailField.val())) {
+            var url = "{{ path('find_person_by_mail', {'mail': '__mail__', 'hash': hash}) }}".replace("__mail__", mailField.val());
+            $.get(url, null, function (result) {
+                var registeredPersons = result.registered;
+                var unregisteredPersons = result.unregistered;
+                var resField = $("#emailResults");
+                resField.html("");
+                if (registeredPersons.length > 0 || unregisteredPersons.length > 0) {
+                    var ulContainer = resField.append($('<ul>')).children().filter('ul');
+                    unregisteredPersons.forEach(item => {
+                        var unregUrl = "{{ path('subscribe_person_for_training', {'hash': hash, 'person': '__person__'}) }}".replace('__person__', item.id);
+                        ulContainer.append($('<li>').append($('<a href="' + unregUrl + '">' + item.firstName + ' ' + item.familyName + ' für Training anmelden</a>')));
+                    });
+                    registeredPersons.forEach(item => {
+                        var regUrl = "{{ path('unsubscribe_person_for_training', {'hash': hash, 'person': '__person__'}) }}".replace('__person__', item.id);
+                        ulContainer.append($('<li>').append($('<a href="' + regUrl + '">' + item.firstName + ' ' + item.familyName + ' von Training abmelden</a>')));
+                    });
+                }
+                if (result.uid === null) {
+                    var createUserUrl = "{{ path('public_create_user', {'hash': hash, 'email': '__email__'}) }}".replace('__email__', mailField.val());
+                    registerNewField.append($('<a href="'+createUserUrl+'">Neue Person registrieren</a>'));
+                } else {
+                    var regPersonUrl = "{{ path('register_person', {'hash': hash, 'user': '__user__'}) }}".replace('__user__', result.uid);
+                    registerNewField.append($('<a href="'+regPersonUrl+'">Neue Person registrieren</a>'));
+                }
+            })
+        }
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

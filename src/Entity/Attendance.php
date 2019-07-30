@@ -50,6 +50,16 @@ class Attendance {
      */
     private $confirmationTimestamp;
 
+    public function __construct(Person $person = null, Training $training = null, $ip = null)
+    {
+        $this->person = $person;
+        $this->training = $training;
+        $this->ip = $ip;
+        if ($person !== null && $training !== null) {
+            $this->enlistingTimestamp = new \DateTime();
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;
