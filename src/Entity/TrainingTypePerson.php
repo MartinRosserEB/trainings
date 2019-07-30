@@ -105,7 +105,7 @@ class TrainingTypePerson
         return $this->getPerson()->__toString();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
