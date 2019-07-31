@@ -1,0 +1,6 @@
+# fixtures/training_type.yaml
+
+App\Entity\TrainingType:
+    training_type{1..5}:
+        name: <sentence(3)>
+        description: <sentence()>

@@ -1,0 +1,20 @@
+# fixtures/training.yaml
+
+App\Entity\Training:
+    tttraining{1..20}:
+        title: <sentence(3)>
+        description: <text()>
+        creator: '@user*'
+        trainingType: '@training_type*'
+        place: <sentence(3)>
+        start: <date_create()>
+        end: <date_create()>
+    tttraining21:
+        title: <sentence(3)>
+        description: <text()>
+        creator: '@user*'
+        trainingType: '@training_type*'
+        public: <md5()>
+        place: <sentence(3)>
+        start: <date_create()>
+        end: <date_create()>

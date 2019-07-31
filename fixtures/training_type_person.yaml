@@ -1,0 +1,19 @@
+# fixtures/training_type_person.yaml
+
+App\Entity\TrainingTypePerson:
+    ttraining_type_person{1..10}:
+        person: '@person*'
+        trainingType: '@training_type1'
+        role: ROLE_ADMIN
+        activeSince: <date_create()>
+        activeUntil: <date_create()>
+    ttraining_type_person{11..14}:
+        person: '@person*'
+        trainingType: '@training_type*'
+        role: ROLE_USER
+        activeSince: <date_create()>
+    ttraining_type_person{15..20}:
+        person: '@person*'
+        trainingType: '@training_type*'
+        role: ROLE_ADMIN
+        activeSince: <date_create()>

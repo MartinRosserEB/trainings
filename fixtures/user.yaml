@@ -1,0 +1,22 @@
+# fixtures/user.yaml
+
+App\Entity\User:
+    user1:
+        email: 'me@example.org'
+        password: <password()>
+        roles:
+            - ROLE_ADMIN
+            - ROLE_USER
+    user{2..10}:
+        email: <safeEmail()>
+        password: <password()>
+        roles:
+            - ROLE_ADMIN
+            - ROLE_USER
+    user{11..20}:
+        email: <safeEmail()>
+        password: <password()>
+        roles:
+            - ROLE_USER
+    user{21..50}:
+        email: <email()>

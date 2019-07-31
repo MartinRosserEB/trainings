@@ -1,0 +1,23 @@
+# fixtures/person.yaml
+
+App\Entity\Person:
+    person{1..5}:
+        firstName: <firstName()>
+        familyName: <lastName()>
+        birthdate: <date_create()>
+        street: 'Example street'
+        streetNo: '321'
+        city: 'Example city'
+        zipCode: <numberBetween(1000, 9000)>
+        phone: <numberBetween(1000000000000, 9999999999999)>
+        user: '@user1'
+    person{6..100}:
+        firstName: <firstName()>
+        familyName: <lastName()>
+        birthdate: <date_create()>
+        street: Example street
+        streetNo: 321
+        city: Example city
+        zipCode: <numberBetween(1000, 9000)>
+        phone: <numberBetween(1000000000000, 9999999999999)>
+        user: '@user*'
