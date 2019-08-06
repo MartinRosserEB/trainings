@@ -29,7 +29,7 @@ class PublicController extends AbstractController
             $person = $em->getRepository(Person::class)->findOneById($person);
         }
 
-        $training = $this->getDoctrine()->getManager()->getRepository(Training::class)->findOneByPublic($hash);
+        $training = $em->getRepository(Training::class)->findOneByPublic($hash);
 
         return $this->render('public/show_training_by_hash.html.twig', [
             'training' => $training,
