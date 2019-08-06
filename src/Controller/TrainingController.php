@@ -32,9 +32,11 @@ class TrainingController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $training = $form->getData();
+            $public = null;
             if ($form->get('public')->getData()) {
-                $training->setPublic(true);
+                $public = md5((new \DateTime())->format('d.m.Y H:i'));
             }
+            $training->setPublic($public);
             $training->setCreator($user);
             $em = $this->getDoctrine()->getManager();
             $em->persist($training);
@@ -61,9 +63,9 @@ class TrainingController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $training = $form->getData();
-            $public = false;
+            $public = null;
             if ($form->get('public')->getData()) {
-                $public = true;
+                $public = md5((new \DateTime())->format('d.m.Y H:i'));
             }
             $training->setPublic($public);
             $em = $this->getDoctrine()->getManager();

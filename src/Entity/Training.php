@@ -229,13 +229,9 @@ class Training {
         return $this->public;
     }
 
-    public function setPublic(bool $doSet)
+    public function setPublic(string $public)
     {
-        if ($doSet) {
-            $this->public = md5((new \DateTime())->format('d.m.Y H:i'));
-        } else {
-            $this->public = null;
-        }
+        $this->public = $public;
 
         return $this;
     }
