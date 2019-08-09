@@ -5,59 +5,43 @@
         <title>{% block title %}BTV Bern{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.5.3/dist/css/foundation.min.css" integrity="sha256-xpOKVlYXzQ3P03j397+jWFZLMBXLES3IiryeClgU5og= sha384-gP4DhqyoT9b1vaikoHi9XQ8If7UNLO73JFOOlQV1RATrA7D0O7TjJZifac6NwPps sha512-AKwIib1E+xDeXe0tCgbc9uSvPwVYl6Awj7xl0FoaPFostZHOuDQ1abnDNCYtxL/HWEnVOMrFyf91TDgLPi9pNg==" crossorigin="anonymous">
         <style>
-            .topBar {
-                border-bottom: solid 4px #af141b;
-            }
-            .mainNavigation {
-                height: 150px;
-                display: flex;
-                flex-direction: row;
-                margin: 0 20%;
-                padding: 1rem 0;
-                position: relative;
-            }
-            .logo {
-                background: white;
-                padding: 0 20px;
-                position: absolute;
-                left: 0;
-                transform: translateX(-100%);
-            }
             .mainContainer {
-                margin: 50px 20%;
+                padding: 1rem;
+                border-top: 1px solid black;
             }
-            .navigPart { flex: 1; margin-top: 110px; }
-            .vTop { vertical-align: top; }
         </style>
     </head>
     <body>
-        <div class="topBar">
-            <div class="mainNavigation">
-                <div class="logo"><img src="https://btvbern.ch/wp-content/uploads/2019/05/BTV_logo19.png" width="180px" height="215px" alt="BTV Logo"></div>
-                <div class="navigPart">
-                    <a href="{{ path('list_training_types') }}">Trainingsarten anzeigen</a>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('create_training_type') }}">Neue Trainingsart erstellen</a>
-                    {% endif %}
-                </div>
-                <div class="navigPart">
-                    <a href="{{ path('create_training') }}">Neues Training erstellen</a>
-                </div>
-                <div class="navigPart">
-                    <a href="{{ path('list_users') }}">Benutzer anzeigen</a>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('create_user') }}">Benutzer erstellen</a>
-                    {% endif %}
-                    <a href="{{ path('edit_own_user') }}">Kontoeinstellungen bearbeiten</a>
-                    <a href="{{ path('app_logout') }}">Ausloggen</a>
-                </div>
-            </div>
-        </div>
+        <ul class="vertical menu drilldown" data-drilldown data-auto-height="true">
+          <li>
+            <a href="#">Trainings</a>
+            <ul class="menu vertical nested">
+              <li><a href="{{ path('list_training_types') }}">Trainingsarten anzeigen</a></li>
+              {% if is_granted('ROLE_ADMIN') %}
+                <li><a href="{{ path('create_training_type') }}">Neue Trainingsart erstellen</a></li>
+              {% endif %}
+              <li><a href="{{ path('create_training') }}">Neues Training erstellen</a></li>
+            </ul>
+          <li>
+            <a href="#">Administration</a>
+            <ul class="menu vertical nested">
+              <li><a href="{{ path('list_users') }}">Benutzer anzeigen</a></li>
+              {% if is_granted('ROLE_ADMIN') %}
+                <li><a href="{{ path('create_user') }}">Benutzer erstellen</a></li>
+              {% endif %}
+              <li><a href="{{ path('edit_own_user') }}">Kontoeinstellungen bearbeiten</a></li>
+              <li><a href="{{ path('app_logout') }}">Ausloggen</a></li>
+            </ul>
+          </li>
+        </ul>
         <div class="mainContainer">
             {% block body %}{% endblock %}
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.5.3/dist/js/foundation.min.js" integrity="sha256-/PFxCnsMh+nTuM0k3VJCRch1gwnCfKjaP8rJNq5SoBg= sha384-9ksAFjQjZnpqt6VtpjMjlp2S0qrGbcwF/rvrLUg2vciMhwc1UJJeAAOLuJ96w+Nj sha512-UMSn6RHqqJeJcIfV1eS2tPKCjzaHkU/KqgAnQ7Nzn0mLicFxaVhm9vq7zG5+0LALt15j1ljlg8Fp9PT1VGNmDw==" crossorigin="anonymous"></script>
+        <script>$(document).ready(function () { $(document).foundation(); });</script>
         {% block javascripts %}{% endblock %}
     </body>
 </html>
