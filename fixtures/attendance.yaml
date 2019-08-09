@@ -1,12 +1,12 @@
 # fixtures/attendance.yaml
 
 App\Entity\Attendance:
-    attendance{1..20}:
+    attendance{1..2000}:
         training: '@tttraining*'
         enlistingIp: <ipv4()>
         enlistingTimestamp: <date_create()>
         person: '@person*'
-    attendance{21..40}:
+    attendance{2001..4000}:
         training: '@tttraining*'
         enlistingIp: <ipv4()>
         enlistingTimestamp: <date_create()>

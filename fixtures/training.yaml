@@ -10,11 +10,12 @@ App\Entity\Training:
         place: <sentence(3)>
         start: <date_create()>
         end: <date_create()>
-    tttraining{2..20}:
+    tttraining{2..500}:
         title: <sentence(3)>
         description: <text()>
         creator: '@user*'
         trainingType: '@training_type*'
+        public: <md5()>
         place: <sentence(3)>
         start: <date_create()>
         end: <date_create()>
