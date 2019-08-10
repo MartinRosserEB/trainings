@@ -8,8 +8,8 @@ App\Entity\Training:
         trainingType: '@training_type*'
         public: 'ac37a138bb7fd07d622ba45df045f144'
         place: <sentence(3)>
-        start: <date_create()>
-        end: <date_create()>
+        start: <dateTimeBetween("-200 days", "+200 days")>
+        end: <dateTimeBetween($start, "+200 days")>
     tttraining{2..500}:
         title: <sentence(3)>
         description: <text()>
@@ -17,5 +17,5 @@ App\Entity\Training:
         trainingType: '@training_type*'
         public: <md5()>
         place: <sentence(3)>
-        start: <date_create()>
-        end: <date_create()>
+        start: <dateTimeBetween("-200 days", "+200 days")>
+        end: <dateTimeBetween($start, "+200 days")>
