@@ -229,7 +229,7 @@ class Training {
         return $this->public;
     }
 
-    public function setPublic(string $public)
+    public function setPublic(?string $public)
     {
         $this->public = $public;
 
